@@ -1,10 +1,10 @@
 package fr.ferreira.donovan.exam.security;
 
-import fr.donovan.spotifish.dto.UserLoginDTO;
-import fr.donovan.spotifish.security.JwtService;
-import fr.donovan.spotifish.custom_response.JwtTokenResponse;
-import fr.donovan.spotifish.entity.User;
-import fr.donovan.spotifish.service.UserService;
+import fr.ferreira.donovan.exam.DTO.UserLoginDTO;
+import fr.ferreira.donovan.exam.security.JwtService;
+import fr.ferreira.donovan.exam.custom_response.JwtTokenResponse;
+import fr.ferreira.donovan.exam.entity.User;
+import fr.ferreira.donovan.exam.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

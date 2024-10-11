@@ -1,6 +1,6 @@
 package fr.ferreira.donovan.exam.mapping;
 
-public class UrlRoute {
+public class UrlRoute implements UrlRouteCoordinate, UrlRouteMap, UrlRouteGame, UrlRouteRound, UrlRouteUser {
 
     public static final String URL_API = "/api";
     public static final String URL_LOGIN = "/login";

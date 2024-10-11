@@ -22,5 +22,4 @@ public class CustomResponse<T> {
 
     private T value;
 
-
 }

@@ -1,6 +1,6 @@
 package fr.ferreira.donovan.exam.security;
 
-import fr.donovan.spotifish.service.UserService;
+import fr.ferreira.donovan.exam.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

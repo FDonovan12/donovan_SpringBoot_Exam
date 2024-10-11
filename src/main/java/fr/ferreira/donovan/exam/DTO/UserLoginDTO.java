@@ -1,0 +1,21 @@
+package fr.ferreira.donovan.exam.DTO;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class UserLoginDTO {
+
+    @NotBlank(message = "This should be a valid username")
+    private String email;
+
+    @NotBlank(message = "This should be a valid password")
+    private String password;
+
+}

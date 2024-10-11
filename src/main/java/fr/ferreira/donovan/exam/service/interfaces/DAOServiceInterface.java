@@ -3,13 +3,15 @@ package fr.ferreira.donovan.exam.service.interfaces;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface DAOServiceInterface<T, C, I> {
 
-    Page<T> findAll(Pageable pageable);
+    List<T> findAll();
 
     T getObjectById(I id);
 
-    T persist(C dto);
+    T create(C dto);
 
-    T persist(C dto, I id);
+    T update(C dto, I id);
 }
