@@ -49,6 +49,7 @@ public class SecurityConfig {
                             UrlRoute.URL_GAME_LAST,
                             UrlRoute.URL_MAP_BEST
                     ).permitAll()
+                    .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN")
                     .requestMatchers("/api/**").authenticated()
                     .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("ROLE_ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("ROLE_ADMIN")
