@@ -1,11 +1,14 @@
 package fr.ferreira.donovan.exam.service;
 
 import fr.ferreira.donovan.exam.entity.Game;
+import fr.ferreira.donovan.exam.entity.User;
 import fr.ferreira.donovan.exam.repository.GameRepository;
 import fr.ferreira.donovan.exam.DTO.GameDTO;
 import fr.ferreira.donovan.exam.exception.NotFoundExamException;
 import fr.ferreira.donovan.exam.service.interfaces.DAOServiceInterface;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -23,8 +26,8 @@ public class GameService {
 
     private UserService userService;
 
-    public List<Game> findAll() {
-        return this.gameRepository.findAll();
+    public Page<Game> findAll(Pageable pageable) {
+        return this.gameRepository.findAll(pageable);
     }
 
     public Game getObjectById(String id) {
@@ -35,7 +38,7 @@ public class GameService {
     public Game create(GameDTO gameDTO, Principal principal) {
         Game game = getObjectFromDTO(gameDTO);
         game.setCreatedAt(LocalDateTime.now());
-        game.setUser(userService.loadUserByUsername(principal.getName()));
+        game.setUser(userService.getUserFromPrincipal(principal));
         return gameRepository.saveAndFlush(game);
     }
 
@@ -60,5 +63,13 @@ public class GameService {
         game.setNbRounds(gameDTO.getNbRound());
         game.setMap(mapService.getObjectById(gameDTO.getMapId()));
         return game;
+    }
+
+    public List<Game> last() {
+        return gameRepository.findTop10ByOrderByCreatedAtDesc();
+    }
+
+    public List<Game> scores() {
+        return gameRepository.scores();
     }
 }

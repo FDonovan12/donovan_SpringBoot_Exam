@@ -6,19 +6,22 @@ import fr.ferreira.donovan.exam.DTO.MapDTO;
 import fr.ferreira.donovan.exam.exception.NotFoundExamException;
 import fr.ferreira.donovan.exam.service.interfaces.DAOServiceInterface;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class MapService implements DAOServiceInterface<Map, MapDTO, Long> {
+public class MapService {
 
     private MapRepository mapRepository;
 
-    public List<Map> findAll() {
-        return this.mapRepository.findAll();
+    public Page<Map> findAll(Pageable pageable) {
+        return this.mapRepository.findAll(pageable);
     }
 
     public Map getObjectById(Long id) {
@@ -28,7 +31,7 @@ public class MapService implements DAOServiceInterface<Map, MapDTO, Long> {
 
     public Map create(MapDTO mapDTO) {
         Map map = getObjectFromDTO(mapDTO);
-        // TODO complete dto -> object
+        map.setCreatedAt(LocalDateTime.now());
         return mapRepository.saveAndFlush(map);
     }
 
@@ -38,7 +41,6 @@ public class MapService implements DAOServiceInterface<Map, MapDTO, Long> {
             map = getObjectById(id);
         }
         map = getObjectFromDTO(mapDTO);
-        // TODO complete dto -> object
         return mapRepository.saveAndFlush(map);
     }
 
@@ -47,7 +49,11 @@ public class MapService implements DAOServiceInterface<Map, MapDTO, Long> {
     }
 
     public Map getObjectFromDTO(MapDTO mapDTO, Map map) {
-        // TODO Complete
+        map.setName(mapDTO.getName());
         return map;
+    }
+
+    public List<Map> best() {
+        return mapRepository.best();
     }
 }

@@ -5,6 +5,7 @@ import fr.ferreira.donovan.exam.repository.UserRepository;
 import fr.ferreira.donovan.exam.DTO.UserDTO;
 import fr.ferreira.donovan.exam.exception.NotFoundExamException;
 import fr.ferreira.donovan.exam.service.interfaces.DAOServiceInterface;
+import jakarta.xml.bind.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,11 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -35,8 +36,15 @@ public class UserService implements DAOServiceInterface<User, UserDTO, String>, 
 
     public User create(UserDTO userDTO) {
         User user = getObjectFromDTO(userDTO);
-        // TODO complete dto -> object
+        user.setRoles("[\"ROLE_USER\"]");
+        user.setCreatedAt(LocalDateTime.now());
+        user.setLevel(1);
         return userRepository.saveAndFlush(user);
+    }
+
+    public User getUserFromPrincipal(Principal principal) {
+        return userRepository.findByEmail(loadUserByUsername(principal.getName()).getUsername())
+                .orElseThrow(() -> new NotFoundExamException("User", "principal.getName()", principal.getName()));
     }
 
     public User update(UserDTO userDTO, String id) {
@@ -45,7 +53,6 @@ public class UserService implements DAOServiceInterface<User, UserDTO, String>, 
             user = getObjectById(id);
         }
         user = getObjectFromDTO(userDTO);
-        // TODO complete dto -> object
         return userRepository.saveAndFlush(user);
     }
 
@@ -54,7 +61,14 @@ public class UserService implements DAOServiceInterface<User, UserDTO, String>, 
     }
 
     public User getObjectFromDTO(UserDTO userDTO, User user) {
-        // TODO Complete
+        if (!Objects.equals(userDTO.getPassword(), userDTO.getConfirmedPassword())) {
+            throw new RuntimeException("password not confirmed");
+        }
+        user.setEmail(userDTO.getEmail());
+        user.setUsername(userDTO.getUsername());
+        user.setBirthedAt(userDTO.getBirthedAt());
+        user.setAvatar(userDTO.getAvatar());
+        user.setPassword(userDTO.getPassword());
         return user;
     }
 
@@ -67,19 +81,9 @@ public class UserService implements DAOServiceInterface<User, UserDTO, String>, 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                userGrantedAuthority(user.getRoles())
+                user.getAuthorities()
         );
     }
 
-    private List<GrantedAuthority> userGrantedAuthority(String role) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        List<String> roles = Collections.singletonList(role);
-        roles.forEach(r -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            if (r.contains("ADMIN")) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            }
-        });
-        return authorities;
-    }
+
 }

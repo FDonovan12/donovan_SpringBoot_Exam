@@ -43,6 +43,14 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth ->
                 auth
                     .requestMatchers("/api/**").permitAll()
+                    .requestMatchers(
+                            UrlRoute.URL_LOGIN,
+                            UrlRoute.URL_REGISTER,
+                            UrlRoute.URL_GAME_SCORES,
+                            UrlRoute.URL_GAME_LAST,
+                            UrlRoute.URL_MAP_BEST
+                    ).permitAll()
+                    .requestMatchers("/api/**").authenticated()
                     .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("ROLE_ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("ROLE_ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyAuthority("ROLE_ADMIN")

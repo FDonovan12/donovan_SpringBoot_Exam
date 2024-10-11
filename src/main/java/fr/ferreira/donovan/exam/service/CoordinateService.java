@@ -31,6 +31,10 @@ public class CoordinateService implements DAOServiceInterface<Coordinate, Coordi
         return coordinateRepository.saveAndFlush(coordinate);
     }
 
+    public Coordinate findRandom() {
+        return coordinateRepository.findRandom();
+    }
+
     public Coordinate update(CoordinateDTO coordinateDTO, Long id) {
         Coordinate coordinate = new Coordinate();
         if (id != null) {

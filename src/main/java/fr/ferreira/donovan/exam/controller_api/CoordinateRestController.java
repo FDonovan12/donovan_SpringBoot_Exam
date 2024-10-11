@@ -21,6 +21,7 @@ public class CoordinateRestController {
     private CoordinateService coordinateService;
 
     @PostMapping(path = UrlRoute.URL_COORDINATE_NEW)
+    @JsonView(JsonViews.CoordinateShowJsonViews.class)
     public Coordinate create(@Valid @RequestBody CoordinateDTO coordinateDTO) {
         return coordinateService.create(coordinateDTO);
     }

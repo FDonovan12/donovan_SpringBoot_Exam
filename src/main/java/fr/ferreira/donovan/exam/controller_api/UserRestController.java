@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +21,9 @@ public class UserRestController {
 
     private UserService userService;
 
-    @GetMapping(path = UrlRoute.URL_USER + "/{id}")
+    @GetMapping(path = UrlRoute.URL_USER + "/me")
     @JsonView(JsonViews.UserShowJsonViews.class)
-    public User show(@PathVariable String id) {
-        return this.userService.getObjectById(id);
+    public User show(Principal principal) {
+        return this.userService.getUserFromPrincipal(principal);
     }
 }

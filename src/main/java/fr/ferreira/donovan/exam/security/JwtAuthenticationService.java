@@ -28,7 +28,7 @@ public class JwtAuthenticationService {
         try {
             Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    userLoginDTO.getUsername(),
+                    userLoginDTO.getEmail(),
                     userLoginDTO.getPassword()
                 )
             );

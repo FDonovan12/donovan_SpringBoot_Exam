@@ -8,6 +8,10 @@ import fr.ferreira.donovan.exam.json_views.JsonViews;
 import fr.ferreira.donovan.exam.mapping.UrlRoute;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +26,18 @@ public class MapRestController {
 
     @GetMapping(path = UrlRoute.URL_MAP)
     @JsonView(JsonViews.MapListJsonViews.class)
-    public List<Map> list() {
-        return this.mapService.findAll();
+    public Page<Map> list(@PageableDefault(
+                                        size = 12,
+                                        sort = { "name" },
+                                        direction = Sort.Direction.ASC)
+                                        Pageable pageable) {
+        return this.mapService.findAll(pageable);
     }
 
-    @GetMapping(path = UrlRoute.URL_MAP+"/best")
+    @GetMapping(path = UrlRoute.URL_MAP_BEST)
     @JsonView(JsonViews.MapListJsonViews.class)
     public List<Map> best() {
-        return this.mapService.findAll();
+        return this.mapService.best();
     }
 
     @GetMapping(path = UrlRoute.URL_MAP + "/{id}")
@@ -39,11 +47,13 @@ public class MapRestController {
     }
 
     @PostMapping(path = UrlRoute.URL_MAP_NEW)
+    @JsonView(JsonViews.MapShowJsonViews.class)
     public Map create(@Valid @RequestBody MapDTO mapDTO) {
         return mapService.create(mapDTO);
     }
 
     @PutMapping(path = UrlRoute.URL_MAP_EDIT + "/{id}")
+    @JsonView(JsonViews.MapShowJsonViews.class)
     public Map update(@Valid @RequestBody MapDTO mapDTO, @PathVariable Long id) {
         return mapService.update(mapDTO, id);
     }
